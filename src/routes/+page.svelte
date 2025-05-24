@@ -7,9 +7,8 @@
   async function greet(event: Event) {
     event.preventDefault();
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    const path = await invoke("capture_screen_region");
-    console.log(path);
-    greetMsg = path;
+    const text = await invoke("screencapture_to_clipboard");
+    console.log(11, text);
   }
 </script>
 
