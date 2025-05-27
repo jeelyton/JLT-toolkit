@@ -6,6 +6,7 @@ use tauri_plugin_store::StoreExt;
 use std::process::Command;
 use tauri_plugin_global_shortcut::{Shortcut, Modifiers, Code};
 use std::str::FromStr;
+use tauri::Manager;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
@@ -37,8 +38,13 @@ fn parse_shortcut(shortcut_str: &str) -> (Modifiers, Code) {
 }
 
 fn capture_screen_region(app_handle: &AppHandle) -> String {
-    // 生成临时文件路径（macOS 推荐用 /tmp）
-    let temp_path = "/tmp/jeelyton-tool-orc.png";
+    let cache_dir = app_handle.path().app_cache_dir().unwrap();
+    log::info!("cache_dir: {}", cache_dir.display());
+    std::fs::create_dir_all(&cache_dir).unwrap_or_else(|e| {
+        log::error!("Failed to create cache directory: {}", e);
+    });
+    let path_buf = cache_dir.join("jeelyton-tool-orc.png");
+    let temp_path = path_buf.to_str().unwrap();
 
     // let output = Command::new("cmd").output().unwrap();
 
@@ -65,13 +71,12 @@ fn capture_screen_region(app_handle: &AppHandle) -> String {
     temp_path.to_string()
 }
 
-fn run_ocr(app_handle: &AppHandle, path: String) -> String {
-    let shell = app_handle.shell();
+fn run_ocr(app: &AppHandle, path: String) -> String {
     let output = match tauri::async_runtime::block_on(async move {
-        shell
+        app.shell()
             .command("uv")
             .args(["run", "ocr.py", &path])
-            .current_dir("/Users/brook/code/jeelyton-tools/src-py")
+            .current_dir("src-py")
             .output()
             .await
     }) {
@@ -112,7 +117,9 @@ fn screencapture_to_clipboard(app: AppHandle) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .plugin(tauri_plugin_log::Builder::new().build())
+        .plugin(tauri_plugin_log::Builder::new()
+            .level(log::LevelFilter::Info)
+            .build())
         .plugin(tauri_plugin_store::Builder::default().build())
         // .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
@@ -125,7 +132,7 @@ pub fn run() {
                 let settings = app.store("settings.json")?;
                 let shortcut_str = settings.get("ocr_shortcut")
                     .and_then(|v| v.as_str().map(String::from))
-                    .unwrap_or("F12".to_string());
+                    .unwrap_or("F8".to_string());
                 
                 let (modifiers, key) = parse_shortcut(&shortcut_str);
                 let ocr_shortcut = Shortcut::new(Some(modifiers), key);

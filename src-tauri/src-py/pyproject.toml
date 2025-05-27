@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "marker-pdf[full]>=1.7.3",
     "onnxruntime>=1.22.0",
     "rapidocr>=2.1.0",
 ]
@@ -13,3 +14,9 @@ dependencies = [
 [[tool.uv.index]]
 url = "https://mirrors.aliyun.com/pypi/simple"
 default = true
+
+[dependency-groups]
+dev = [
+    "nuitka>=2.7.3",
+    "transformers>=4.52.3",
+]
