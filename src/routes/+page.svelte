@@ -1,8 +1,14 @@
 <script lang="ts">
-  import { desktopDir } from "@tauri-apps/api/path";
-  import { writeFile } from "@tauri-apps/plugin-fs";
+  import { fetch } from '@tauri-apps/plugin-http';
+  import { desktopDir, basename } from "@tauri-apps/api/path";
+  import { writeFile, stat } from "@tauri-apps/plugin-fs";
+    import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
   import { openPath } from '@tauri-apps/plugin-opener';
   import axios from "axios";
+    import { onMount } from "svelte";
+    import  * as clipboard from "@tauri-apps/plugin-clipboard-manager";
+    import { open } from "@tauri-apps/plugin-dialog";
+    import { upload } from "@tauri-apps/plugin-upload";
   const flowApiURL = import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
 
 
@@ -31,13 +37,6 @@
     const filePath = `${desktopPath}/${fileName}`
     await writeFile(filePath, data)
     return {filePath, fileName}
-  }
-
-  async function openFile(filePath: string) {
-    const command = currentPlatform === 'windows' 
-      ? Command.create('cmd', ['/c', 'start', '', filePath])
-      : Command.create('open', [filePath]);
-    await command.execute();
   }
 
   type FileStatus = 'pending' | 'processing' | 'completed' | 'error';
@@ -94,11 +93,79 @@
     }
   }
 
+  async function joinWithComma() {
+    let text = await clipboard.readText()
+    text = text.split(/[\n\t]+/g).map((line) => `${line.trim()}`).join(',')
+    clipboard.writeText(text)
+  }
+
+  onMount(() => {
+    register('Alt+,',  joinWithComma)
+    return () => {
+      unregister('Alt+,')
+    }
+  })
+
+  async function xdownload() {
+    const requestData = {
+      "mimeType": "application/pdf",
+      "fileType": "pdf",
+      "fileExtension": "pdf",
+      "data": "filesystem-v2",
+      "fileName": "吉利通POORD045329.pdf",
+      "id": "filesystem-v2:workflows/3RcUHwuI2Wy4zZC1/executions/temp/binary_data/62017fe3-88fe-4070-9818-8f15486b5e28",
+      "fileSize": "139 kB",
+      "fileKey": "2025-06-13/619df2f70087fef7a3bfa86dea34403ee8c0ea51edb8cf0818a9d881904b0fa7"
+    }
+    const res = await fetch(flowApiURL + '/flows/extract-customer-po', {
+      method: 'POST',
+      body: JSON.stringify(requestData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if(!res.ok) {
+      console.error(res)
+      return
+    }
+    const desktopPath = await desktopDir()
+    const fileName = getFileName(res.headers.get('content-disposition') || '')
+    const filePath = `${desktopPath}/${fileName}`
+    const responseData = await res.bytes()
+    await writeFile(filePath, responseData)
+  }
+  
+
+  async function showSelectFile() {
+    const files = await open({
+      multiple: true,
+      filters: [
+        { name: 'Images', extensions: ['jpg', 'png'] },
+        { name: 'PDF', extensions: ['pdf'] }
+      ]
+    })
+    if(files?.length) {
+      const filePath = files[0]
+      const fileName = await basename(filePath)
+      const fileStat = await stat(filePath)
+      const fileSize = fileStat.size
+      const res  = await upload('http://127.0.0.1:8601/file/', filePath, ({progress, progressTotal, total}) => {
+        console.log(Date.now(), Math.floor((progressTotal/fileSize) * 100), fileSize === progressTotal)
+      }, {
+        'FileName': encodeURIComponent(fileName),
+        TOKEN: 'xwCO2fNRSAbXtQGe',
+      })
+      console.log(res)
+    }
+  }
+
   
 </script>
 
 <main class="container">
   <h1>客户采购订单转 Excel</h1>
+  <button onclick={xdownload}>Download</button>
+  <button onclick={showSelectFile}>选择文件</button>
   <input type="file" onchange={handleFileChange} multiple />
   <p>当前不支持图片及纯图片的 PDF</p>
 
