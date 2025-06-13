@@ -11,6 +11,21 @@
     "clipboard-manager:default",
     "shell:default",
     "log:default",
-    "store:default"
+    "store:default",
+    "fs:default",
+    "os:default",
+    {
+      "identifier": "fs:write-all",
+      "allow": [
+        { "path": "$DESKTOP" },
+        { "path": "$DESKTOP/**" }
+      ]
+    },
+    {
+      "identifier": "opener:allow-open-path",
+      "allow": [
+        { "path": "$DESKTOP/**" }
+      ]
+    }
   ]
 }
