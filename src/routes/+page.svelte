@@ -9,6 +9,9 @@
     import  * as clipboard from "@tauri-apps/plugin-clipboard-manager";
     import { open } from "@tauri-apps/plugin-dialog";
     import { upload } from "@tauri-apps/plugin-upload";
+    import Button from '$lib/components/ui/button/button.svelte';
+    import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+    import Input from '$lib/components/ui/input/input.svelte';
   const flowApiURL = import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
 
 
@@ -169,6 +172,10 @@
   <input type="file" onchange={handleFileChange} multiple class="form-input" />
   <input type="text"/>
   <input type="text" class="rounded"/>
+  <Button>Click Me</Button>
+  <Button variant="outline">Click Me</Button>
+  <Textarea/>
+  <Input/>
   <p>当前不支持图片及纯图片的 PDF</p>
 
   <div class="file-list">
