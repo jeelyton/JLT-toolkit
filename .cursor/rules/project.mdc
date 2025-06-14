@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+This is a Toolkit App built with Tauri + Shadcn Svelte + TailwindCSS v4
+
+# Component Preferences
+- Svelte version is v5, please use Runes
+- Use shadcn-svelte components: Button, Card, Input, Label, Popover, Switch, Tabs, Textarea.
+- Style exclusively with Tailwind CSS v4 (avoid `<style>` tags).
