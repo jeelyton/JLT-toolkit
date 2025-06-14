@@ -166,7 +166,9 @@
   <h1>客户采购订单转 Excel</h1>
   <button onclick={xdownload}>Download</button>
   <button onclick={showSelectFile}>选择文件</button>
-  <input type="file" onchange={handleFileChange} multiple />
+  <input type="file" onchange={handleFileChange} multiple class="form-input" />
+  <input type="text"/>
+  <input type="text" class="rounded"/>
   <p>当前不支持图片及纯图片的 PDF</p>
 
   <div class="file-list">
