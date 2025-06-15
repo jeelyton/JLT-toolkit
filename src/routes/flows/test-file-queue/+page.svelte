@@ -5,8 +5,9 @@
     import { onMount } from "svelte";
 
 
-
   async function onSelectFile() {
+  }
+  async function onProcessFile() {
   }
   onMount(() => {
     const filePath = '/Users/brook/Downloads/input-pics/吉利通POORD045329.pdf'
@@ -58,6 +59,6 @@
 <Button class="w-full" variant="outline" onclick={onSelectFile}>选择文件</Button>
 
 <div class="mt-5">
-  <FileQueue workflowAPI={''}/>
+  <FileQueue onProcessFile={onProcessFile}/>
 </div>
   

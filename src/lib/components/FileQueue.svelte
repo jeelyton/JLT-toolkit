@@ -7,9 +7,9 @@
   import { uploadFile, executeWorkflow } from '$lib/apis/api';
 
   // Props
-  const { workflowAPI, maxConcurrent = 5 } = $props<{
-    // onProcessFile: (fileItem: FileItem) => Promise<void>
-    workflowAPI: string
+  const { onProcessFile = defaultProcessFile, workflowAPI, maxConcurrent = 5 } = $props<{
+    onProcessFile?: (fileItem: FileItem) => Promise<void>
+    workflowAPI?: string
     maxConcurrent?: number
   }>();
 
@@ -29,7 +29,7 @@
     };
   });
 
-  async function onProcessFile(fileItem: FileItem) {
+  async function defaultProcessFile(fileItem: FileItem) {
     const params = fileItem.params
     if(fileItem.inputFiles.length > 0) {
       params.input_files = []
