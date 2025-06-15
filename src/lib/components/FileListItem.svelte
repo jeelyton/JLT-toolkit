@@ -38,6 +38,9 @@
 <div class="p-3 border rounded mb-2 {itemClass}">
   <div class="flex justify-between items-start">
     <div class="flex flex-col gap-1">
+      {#if fileItem.params.__TITLE}
+        {fileItem.params.__TITLE}
+      {/if}
       {#each fileItem.inputFiles as file}
         <FileOpen {file} isInput />
       {/each}

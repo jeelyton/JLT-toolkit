@@ -1,6 +1,9 @@
 <script lang="ts">
     import Textarea from "$lib/components/ui/textarea/textarea.svelte";
     import Button from "$lib/components/ui/button/button.svelte";
+    import {FileItem} from "$lib/components/FileItem.svelte";
+    import FileQueue from "$lib/components/FileQueue.svelte";
+    import {N8N_API_URL} from "$lib/apis/api";
 
     let outstockNosText = $state('');
     let rows = $state(3);
@@ -24,6 +27,15 @@
     }
 
     const outstockNos = $derived(outstockNosText.split('\n').filter(Boolean));
+
+    function onSubmit() {
+        for(const outstockNo of outstockNos) {
+            const fileItem = new FileItem({outstockNo, __TITLE: `# ${outstockNo}`}, []);
+            // The FileQueue component will handle the queue management
+            window.dispatchEvent(new CustomEvent('addFile', {detail: fileItem}));
+        }
+        outstockNosText = ''
+    }
 </script>
 
 <h1 class="text-3xl font-semibold text-center mb-5">长城出库单</h1>
@@ -36,5 +48,9 @@
     bind:value={outstockNosText}
     oninput={handleInput}
 />
-<Button class="w-full mt-2">查询</Button>
+<Button class="w-full mt-2" onclick={onSubmit}>确定</Button>
+
+<div class="mt-5">
+    <FileQueue workflowAPI={N8N_API_URL + '/BZ-outstock-detail'}/>
+</div>
 

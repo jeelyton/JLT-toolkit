@@ -4,10 +4,12 @@
   import { onMount } from 'svelte';
   import { FileItem, FileStatuses } from './FileItem.svelte';
   import FileListItem from './FileListItem.svelte';
+  import { uploadFile, executeWorkflow } from '$lib/apis/api';
 
   // Props
-  const { onProcessFile, maxConcurrent = 5 } = $props<{
-    onProcessFile: (fileItem: FileItem) => Promise<void>
+  const { workflowAPI, maxConcurrent = 5 } = $props<{
+    // onProcessFile: (fileItem: FileItem) => Promise<void>
+    workflowAPI: string
     maxConcurrent?: number
   }>();
 
@@ -26,6 +28,25 @@
       window.removeEventListener('addFile', handleAddFile as EventListener);
     };
   });
+
+  async function onProcessFile(fileItem: FileItem) {
+    const params = fileItem.params
+    if(fileItem.inputFiles.length > 0) {
+      params.input_files = []
+      for(const file of fileItem.inputFiles) {
+        const progressInfo = `${params.input_files.length + 1}/${fileItem.inputFiles.length}`
+        const fileInfo = await uploadFile(file, (progress) => {
+          fileItem.setMessage(`上传文件 ${progressInfo} ${progress}%...`)
+        });
+        params.input_files.push(fileInfo)
+      }
+    }
+    fileItem.setMessage('流程运行中...')
+    const outputFile = await executeWorkflow(workflowAPI, params);
+    fileItem.addOutputFile(outputFile);
+    fileItem.setStatus(FileStatuses.COMPLETED);
+    fileItem.setMessage('完成')
+  }
 
 
   async function processFileQueue() {
