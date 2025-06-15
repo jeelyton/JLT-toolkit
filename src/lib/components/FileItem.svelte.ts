@@ -15,6 +15,7 @@ export class FileItem {
     message: string = $state('')
     inputFile: XFile | null = $state(null)
     outputFiles: XFile[] = $state([])
+    time: Date = new Date()
     constructor(inputFile: XFile) {
       this.inputFile = inputFile
     }

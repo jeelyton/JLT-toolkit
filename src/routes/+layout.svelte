@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { Button } from "$lib/components/ui/button";
 	import { Home, Settings, Users, FileText, LogOut } from "@lucide/svelte";
+	import { Toaster } from "$lib/components/ui/sonner/index.js";
 	
 	let { children } = $props();
 
@@ -49,4 +50,5 @@
 	<main class="flex-1 overflow-auto p-5 container max-w-5xl mx-auto">
 		{@render children()}
 	</main>
+	<Toaster position="bottom-center" richColors expand={true} />
 </div>

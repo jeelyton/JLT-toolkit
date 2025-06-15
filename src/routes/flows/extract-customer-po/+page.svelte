@@ -62,7 +62,9 @@
 </script>
   
 <h1 class="text-3xl font-semibold text-center mb-5">客户采购订单转 Excel</h1>
-<Button class="w-full mt-2" variant="outline" onclick={onSelectFile}>选择文件</Button>
+<Button class="w-full" variant="outline" onclick={onSelectFile}>选择文件</Button>
 
-<FileQueue onProcessFile={onProcessFile}/>
+<div class="mt-5">
+  <FileQueue onProcessFile={onProcessFile}/>
+</div>
   
