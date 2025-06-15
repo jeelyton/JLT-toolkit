@@ -43,8 +43,8 @@
     try {
       await onProcessFile(fileItem);
     } catch (err: any) {
-      console.error(err, err.detail);
-      fileItem.setError(err.message || '处理文件时出错');
+      console.error(err);
+      fileItem.setError(err);
     } finally {
       activeProcesses--;
       processFileQueue(); // Process next file in queue

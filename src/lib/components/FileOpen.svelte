@@ -16,7 +16,7 @@
     }
     await openPath(filePath)
   }
-  const typeClass = $derived(isInput ? 'text-gray-500 hover:text-gray-800' : 'text-blue-500 hover:text-blue-800')
+  const typeClass = $derived(isInput ? 'text-gray-700 hover:text-gray-800' : 'text-blue-500 hover:text-blue-800')
 </script>
 <button 
 class="text-sm flex items-center gap-1 group {typeClass}"

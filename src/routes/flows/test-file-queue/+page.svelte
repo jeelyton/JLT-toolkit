@@ -36,55 +36,49 @@
   }
 
   async function onProcessFile(fileItem: FileItem) {
-    // const fileInfo = await uploadFile(fileItem.inputFile!);
-    // const outputFile = await transformFile(fileInfo);
-    // fileItem.addOutputFile(outputFile);
-    // fileItem.setStatus('completed');
   }
 
   async function onSelectFile() {
-    const files = await open({
-      multiple: true,
-      filters: [
-        { name: 'Images', extensions: ['jpg', 'png'] },
-        { name: 'PDF', extensions: ['pdf'] }
-      ]
-    })
-    if(files?.length) {
-      for(const file of files) {
-        const fileName = await basename(file)
-        const fileItem = new FileItem({filePath: file, fileName});
-        // The FileQueue component will handle the queue management
-        window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem }));
-      }
-    }
   }
   onMount(() => {
     const filePath = '/Users/brook/Downloads/input-pics/吉利通POORD045329.pdf'
     const fileName = '吉利通POORD045329.pdf'
-    const fileItem1 = new FileItem({filePath, fileName})
+    const fileItem1 = new FileItem({}, [{filePath, fileName}])
     window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem1 }));
     setTimeout(() => {
       fileItem1.setStatus(FileStatuses.PENDING)
     }, 1000)
-    const fileItem2 = new FileItem({filePath, fileName})
+    const fileItem2 = new FileItem({}, [{filePath, fileName}])
     window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem2 }));
     fileItem2.setStatus(FileStatuses.PROCESSING)
     fileItem2.setMessage('上传文件中...')
-    const fileItem3 = new FileItem({filePath, fileName})
+    const fileItem3 = new FileItem({}, [{filePath, fileName}])
     window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem3 }));
     fileItem3.addOutputFile({filePath: filePath, fileName})
-    fileItem3.setStatus(FileStatuses.COMPLETED)
-    const fileItem31 = new FileItem({filePath: filePath, fileName})
+    fileItem3.setStatus(FileStatuses.PROCESSING)
+    setTimeout(() => {
+      fileItem3.setStatus(FileStatuses.COMPLETED)
+    }, 1000)
+    const fileItem31 = new FileItem({}, [{filePath: filePath, fileName}])
     window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem31 }));
     fileItem31.addOutputFile({filePath, fileName})
     fileItem31.addOutputFile({filePath: filePath + '1', fileName})
-    fileItem31.setStatus(FileStatuses.COMPLETED)
-    const fileItem4 = new FileItem({filePath, fileName})
+    fileItem31.setStatus(FileStatuses.PROCESSING)
+    setTimeout(() => {
+      fileItem31.setStatus(FileStatuses.COMPLETED)
+    }, 1000)
+    const fileItem4 = new FileItem({}, [{filePath, fileName}, {filePath, fileName}])
     window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem4 }));
-    fileItem4.setError('test error')
-    const fileItem41 = new FileItem({filePath, fileName})
+    fileItem4.setStatus(FileStatuses.PROCESSING)
+    const err = new Error('出错啦')
+    err.detail = {
+      code: 1000,
+      message: '出错啦'
+    }
+    fileItem4.setError(err)
+    const fileItem41 = new FileItem({}, [{filePath, fileName}])
     window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem41 }));
+    fileItem41.setStatus(FileStatuses.PROCESSING)
     fileItem41.setError('test error')
     fileItem41.addOutputFile({filePath, fileName})
     fileItem41.addOutputFile({filePath, fileName})

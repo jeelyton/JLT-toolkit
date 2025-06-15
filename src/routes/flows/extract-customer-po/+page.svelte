@@ -4,7 +4,7 @@
   import { basename, desktopDir } from "@tauri-apps/api/path";
   import { writeFile } from "@tauri-apps/plugin-fs";
     import FileQueue from "$lib/components/FileQueue.svelte";
-    import { FileItem } from "$lib/components/FileItem.svelte";
+    import { FileItem, FileStatuses } from "$lib/components/FileItem.svelte";
   import { uploadFile, flowApiURL } from "$lib/apis/api";
 
   function getFileName(contentDisposition: string) {
@@ -22,8 +22,13 @@
       }
     })
     if(!res.ok) {
-      const err = new Error(`程序出错：${res.status} ${res.statusText}`)
-      err.detail = await res.json()
+      const errDetail =await res.json()
+      const err = new Error(`程序异常：${res.status}`)
+      if(typeof errDetail.detail === 'string') {
+        err.message = `${res.status} : ${errDetail.detail}`
+      } else {
+        err.detail = errDetail
+      }
       throw err
     }
     const desktopPath = await desktopDir()
@@ -35,10 +40,22 @@
   }
 
   async function onProcessFile(fileItem: FileItem) {
-    const fileInfo = await uploadFile(fileItem.inputFile!);
-    const outputFile = await transformFile(fileInfo);
+    const params = fileItem.params
+    if(fileItem.inputFiles.length > 0) {
+      params.input_files = []
+      for(const file of fileItem.inputFiles) {
+        const progressInfo = `${params.input_files.length + 1}/${fileItem.inputFiles.length}`
+        const fileInfo = await uploadFile(file, (progress) => {
+          fileItem.setMessage(`上传文件 ${progressInfo} ${progress}%...`)
+        });
+        params.input_files.push(fileInfo)
+      }
+    }
+    fileItem.setMessage('转换文件中...')
+    const outputFile = await transformFile(params);
     fileItem.addOutputFile(outputFile);
-    fileItem.setStatus('completed');
+    fileItem.setStatus(FileStatuses.COMPLETED);
+    fileItem.setMessage('完成')
   }
 
   async function onSelectFile() {
@@ -52,7 +69,7 @@
     if(files?.length) {
       for(const file of files) {
         const fileName = await basename(file)
-        const fileItem = new FileItem({filePath: file, fileName});
+        const fileItem = new FileItem({}, [{filePath: file, fileName}]);
         // The FileQueue component will handle the queue management
         window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem }));
       }
