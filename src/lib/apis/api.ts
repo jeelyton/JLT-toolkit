@@ -3,6 +3,7 @@ import { desktopDir } from "@tauri-apps/api/path";
 import { upload } from "@tauri-apps/plugin-upload";
 import type { XFile } from "$lib/components/FileItem.svelte";
 
+export const IS_DEV = !import.meta.env.VITE_FLOW_API_URL
 export  const FLOW_API_URL = import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
 export const N8N_API_URL = 'https://n8n.17ch.cn/webhook'
 

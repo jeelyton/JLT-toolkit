@@ -5,54 +5,45 @@
     import { Select, SelectContent, SelectItem, SelectTrigger } from "$lib/components/ui/select";
     import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
+    import { onMount } from "svelte";
+    import { downloadDir } from "@tauri-apps/api/path";
 
-    let darkMode = $state(false);
-    let notifications = $state(true);
-    let language = $state<string[]>(['en']);
-    let apiKey = $state('');
+    let outputDir = $state('');
 
-    function handleSave() {
-        // TODO: Implement settings save logic
-        console.log('Saving settings:', { darkMode, notifications, language, apiKey });
-    }
+    onMount(async () => {
+        outputDir = await downloadDir()
+    })
 </script>
 
-<div class="container py-6 space-y-6">
-    <div class="flex items-center justify-between">
-        <h1 class="text-3xl font-bold">设置</h1>
-    </div>
+<h1 class="text-3xl font-semibold text-center mb-5">设置</h1>
+<div class="space-y-6">
 
-    <div class="grid gap-6">
-        <!-- Appearance -->
-        <Card>
-            <CardHeader>
-                <CardTitle>Appearance</CardTitle>
-                <CardDescription>Customize how the application looks</CardDescription>
-            </CardHeader>
-            <CardContent class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <Label for="dark-mode">Dark Mode</Label>
-                    <Switch id="dark-mode" bind:checked={darkMode} />
-                </div>
-            </CardContent>
-        </Card>
+    <!-- Appearance -->
+    <Card>
+        <CardHeader>
+            <CardTitle>通用</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-4">
+            <div class="flex items-center justify-between">
+                <Label for="output-dir">输出目录</Label>
+                <Input class="w-64" type="text" bind:value={outputDir} />
+            </div>
+        </CardContent>
+    </Card>
 
-        <!-- Notifications -->
-        <Card>
-            <CardHeader>
-                <CardTitle>快捷键</CardTitle>
-            </CardHeader>
-            <CardContent class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <Label for="notifications">剪切板转为 IN 表达式</Label>
-                    <Input type="text"
-                            placeholder="Alt + ,"
-                            class="w-32"
-                        />
-                </div>
-            </CardContent>
-        </Card>
-
-       
-    </div>
+    <!-- Notifications -->
+    <Card>
+        <CardHeader>
+            <CardTitle>快捷键</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-4">
+            <div class="flex items-center justify-between">
+                <Label for="notifications">剪切板转为 IN 表达式</Label>
+                <Input type="text"
+                        placeholder="Alt + ,"
+                        class="w-32"
+                    />
+            </div>
+        </CardContent>
+    </Card>
 </div> 

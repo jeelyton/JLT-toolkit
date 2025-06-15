@@ -32,7 +32,7 @@
 </script>
   
 <h1 class="text-3xl font-semibold text-center mb-5">客户采购订单转 Excel</h1>
-<Button class="w-full" variant="outline" onclick={onSelectFile}>选择文件</Button>
+<Button class="w-full border-primary text-primary" variant="outline" onclick={onSelectFile}>选择文件</Button>
 
 <div class="mt-5">
   <FileQueue workflowAPI={FLOW_API_URL + '/flows/extract-customer-po'}/>

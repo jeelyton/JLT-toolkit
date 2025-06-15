@@ -25,48 +25,46 @@
     }
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-background p-4">
-    <Card class="w-full max-w-md">
-        <CardHeader>
-            <CardTitle>Sign in</CardTitle>
-            <CardDescription>Enter your credentials to access your account</CardDescription>
-        </CardHeader>
-        <form onsubmit={handleSubmit}>
-            <CardContent class="space-y-4">
-                <div class="space-y-2">
-                    <Label for="email">Email</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="name@example.com"
-                        bind:value={email}
-                        required
-                        disabled={isLoading}
-                    />
-                </div>
-                <div class="space-y-2">
-                    <Label for="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        placeholder="••••••••"
-                        bind:value={password}
-                        required
-                        disabled={isLoading}
-                    />
-                </div>
-                {#if error}
-                    <Alert variant="destructive">
-                        <AlertCircle class="h-4 w-4" />
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                {/if}
-            </CardContent>
-            <CardFooter>
-                <Button type="submit" class="w-full" disabled={isLoading}>
-                    {isLoading ? 'Signing in...' : 'Sign in'}
-                </Button>
-            </CardFooter>
-        </form>
-    </Card>
-</div> 
+<Card class="max-w-md mx-auto">
+    <CardHeader>
+        <CardTitle>Sign in</CardTitle>
+        <CardDescription>Enter your credentials to access your account</CardDescription>
+    </CardHeader>
+    <form onsubmit={handleSubmit}>
+        <CardContent class="space-y-4">
+            <div class="space-y-2">
+                <Label for="email">Email</Label>
+                <Input
+                    id="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    bind:value={email}
+                    required
+                    disabled={isLoading}
+                />
+            </div>
+            <div class="space-y-2">
+                <Label for="password">Password</Label>
+                <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    bind:value={password}
+                    required
+                    disabled={isLoading}
+                />
+            </div>
+            {#if error}
+                <Alert variant="destructive">
+                    <AlertCircle class="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                </Alert>
+            {/if}
+        </CardContent>
+        <CardFooter>
+            <Button type="submit" class="w-full" disabled={isLoading}>
+                {isLoading ? 'Signing in...' : 'Sign in'}
+            </Button>
+        </CardFooter>
+    </form>
+</Card>
