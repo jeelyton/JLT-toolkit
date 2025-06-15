@@ -9,6 +9,7 @@
 		{ href: '/', label: '通用', icon: Home },
 		{ href: '/flows/outstock-detail', label: '长城出库单', icon: Users },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel' },
+		{ href: '/flows/test-file-queue', label: '测试文件队列' },
 		{ href: '/settings', label: '设置', icon: Settings },
 	];
 </script>
