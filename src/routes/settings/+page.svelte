@@ -7,16 +7,23 @@
     import { Button } from "$lib/components/ui/button";
     import { onMount } from "svelte";
     import { downloadDir } from "@tauri-apps/api/path";
+    import { getVersion } from '@tauri-apps/api/app'
 
     let outputDir = $state('');
+    let version = $state('');
 
     onMount(async () => {
         outputDir = await downloadDir()
+        version = await getVersion()
     })
 </script>
 
 <h1 class="text-3xl font-semibold text-center mb-5">设置</h1>
 <div class="space-y-6">
+
+    <div class="text-center text-sm text-gray-500">
+        当前版本：v{version}
+    </div>
 
     <!-- Appearance -->
     <Card>

@@ -158,42 +158,11 @@ pub fn run() {
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::default().build())
-        // .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![screencapture_to_clipboard])
-        .setup(|app| {
-            #[cfg(desktop)]
-            {
-                let settings = app.store("settings.json")?;
-                let shortcut_str = settings
-                    .get("ocr_shortcut")
-                    .and_then(|v| v.as_str().map(String::from))
-                    .unwrap_or("F8".to_string());
-
-                let (modifiers, key) = parse_shortcut(&shortcut_str);
-                let ocr_shortcut = Shortcut::new(Some(modifiers), key);
-
-                use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
-                app.handle().plugin(
-                    tauri_plugin_global_shortcut::Builder::new()
-                        .with_handler(move |app, shortcut, event| {
-                            if shortcut == &ocr_shortcut {
-                                match event.state() {
-                                    ShortcutState::Pressed => {
-                                        let _ = screencapture_to_clipboard(app.clone());
-                                    }
-                                    ShortcutState::Released => {}
-                                }
-                            }
-                        })
-                        .build(),
-                )?;
-                app.global_shortcut().register(ocr_shortcut)?;
-            }
-            Ok(())
-        })
         .setup(|app| {
             let handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {

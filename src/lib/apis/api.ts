@@ -14,7 +14,6 @@ export async function uploadFile(file: XFile, onProgress?: (progress: number) =>
       onProgress?.(Math.floor((progressTotal/fileSize) * 100))
     }, {
       'FileName': encodeURIComponent(file.fileName),
-      TOKEN: 'xwCO2fNRSAbXtQGe',
     })
     return JSON.parse(res)
 }
@@ -47,7 +46,7 @@ export async function executeWorkflow(workflowAPI: string, fileInfo: any) {
   const desktopPath = await desktopDir()
   const fileName = getFileName(res.headers.get('content-disposition') || '')
   const filePath = `${desktopPath}/${fileName}`
-  const responseData = await res.bytes()
-  await writeFile(filePath, responseData)
+  const responseData = await res.arrayBuffer()
+  await writeFile(filePath, new Uint8Array(responseData))
   return {filePath, fileName}
 }
