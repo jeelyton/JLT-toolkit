@@ -5,6 +5,7 @@
 	import { Toaster } from "$lib/components/ui/sonner/index.js";
 	import { page } from '$app/state';
 	import {IS_DEV} from "$lib/apis/api";
+	import { useGlobalShortcut } from "$lib/hooks/useGlobalShortcut";
 	
 	let { children } = $props();
 
@@ -16,6 +17,10 @@
 	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列' } : []);
 
 	const isLoginPage = $derived(page.url.pathname === '/login');
+
+	$effect(() => {
+		useGlobalShortcut(!isLoginPage);
+	});
 </script>
 
 <div class="flex h-screen bg-background">
