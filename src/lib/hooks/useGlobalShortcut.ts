@@ -31,8 +31,6 @@ export function useGlobalShortcut(enabled: boolean = true) {
       })()
     }
 
-    window.addEventListener('beforeunload', cleanup)
-
     return () => {
       cleanup()
     }
