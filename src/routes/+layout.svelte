@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { Button } from "$lib/components/ui/button";
-	import { Home, Settings, Users, FileText, LogOut } from "@lucide/svelte";
+	import { Home, Settings, Users, FileText, LogOut, Truck } from "@lucide/svelte";
 	import { Toaster } from "$lib/components/ui/sonner/index.js";
 	import { page } from '$app/state';
 	import {IS_DEV} from "$lib/apis/api";
@@ -11,6 +11,7 @@
 
 	const navItems = [
 		{ href: '/', label: '通用', icon: Home },
+		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: Truck },
 		{ href: '/flows/outstock-detail', label: '长城出库单', icon: Users },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel' },
 		{ href: '/settings', label: '设置', icon: Settings },

@@ -35,6 +35,6 @@
 <Button class="w-full border-primary text-primary" variant="outline" onclick={onSelectFile}>选择文件</Button>
 
 <div class="mt-5">
-  <FileQueue workflowAPI={FLOW_API_URL + '/flows/extract-customer-po'}/>
+  <FileQueue workflowAPI={FLOW_API_URL + '/flows/extract-customer-po'} maxConcurrent={5}/>
 </div>
   

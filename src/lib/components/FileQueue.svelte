@@ -7,7 +7,7 @@
   import { uploadFile, executeWorkflow } from '$lib/apis/api';
 
   // Props
-  const { onProcessFile = defaultProcessFile, workflowAPI, maxConcurrent = 5 } = $props<{
+  const { onProcessFile = defaultProcessFile, workflowAPI, maxConcurrent = 1 } = $props<{
     onProcessFile?: (fileItem: FileItem) => Promise<void>
     workflowAPI?: string
     maxConcurrent?: number
@@ -42,10 +42,14 @@
       }
     }
     fileItem.setMessage('流程运行中...')
-    const outputFile = await executeWorkflow(workflowAPI, params);
-    fileItem.addOutputFile(outputFile);
+    const output = await executeWorkflow(workflowAPI, params);
+    if(output.type === 'file') {
+      fileItem.addOutputFile(output);
+      fileItem.setMessage('完成')
+    } else {
+      fileItem.setMessage(JSON.stringify(output))
+    }
     fileItem.setStatus(FileStatuses.COMPLETED);
-    fileItem.setMessage('完成')
   }
 
 
