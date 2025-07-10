@@ -5,14 +5,25 @@
   import { superForm } from "sveltekit-superforms";
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { loginUser } from "$lib/apis/api";
-  import { setTokens } from "$lib/helpers/auth";
+  import { setTokens, isAuthenticated } from "$lib/helpers/auth";
   import { toast } from "svelte-sonner";
   import { goto } from "$app/navigation";
+  import { Alert, AlertTitle, AlertDescription } from "$lib/components/ui/alert/index.js";
+  import { onMount } from 'svelte';
+  import { page } from '$app/state';
 
   let isLoading = $state(false)
+  let errorMessage = $state("")
+
+  // 如果已经登录，自动跳转到主页
+  onMount(() => {
+    if (isAuthenticated()) {
+      goto('/');
+    }
+  });
  
   const form = superForm({
-    username: "",
+    username: localStorage.lastLoginUser || "",
     password: "",
   },{
     validators: zodClient(formSchema as any),
@@ -35,11 +46,11 @@
         isLoading = true
         const res = await loginUser($formData)
         setTokens(res)
+        localStorage.lastLoginUser = $formData.username
         toast.success('登录成功')
-        goto('/')
-    } catch (error) {
-        console.error(error)
-        toast.error('登录失败')
+        goto(page.url.searchParams.get('from') || '/')
+    } catch (error: any) {
+        errorMessage = error.message
     } finally {
         isLoading = false
     }
@@ -66,8 +77,19 @@
             </Form.Control>
             <Form.FieldErrors />
           </Form.Field>
-          <Form.Button class="w-full" disabled={isLoading}>
+          <Form.Button class="w-full mt-2" disabled={isLoading}>
             {isLoading ? "登录中..." : "登录"}
           </Form.Button>
+
+          {#if errorMessage}
+          <Alert variant="destructive" class="mt-4">
+            <AlertTitle>
+              登录失败
+            </AlertTitle>
+            <AlertDescription>
+              {errorMessage}
+            </AlertDescription>
+          </Alert>
+          {/if}
       </form>
 </div>

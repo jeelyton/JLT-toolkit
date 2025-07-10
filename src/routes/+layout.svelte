@@ -6,7 +6,7 @@
 	import { page } from '$app/state';
 	import {IS_DEV} from "$lib/apis/api";
 	import { useGlobalShortcut } from "$lib/hooks/useGlobalShortcut";
-	import { removeAuthToken } from "$lib/helpers/auth";
+	import { removeAuthToken, isAuthenticated } from "$lib/helpers/auth";
 	import { goto } from "$app/navigation";
 	
 	let { children } = $props();
@@ -22,6 +22,13 @@
 
 	$effect(() => {
 		useGlobalShortcut(!isLoginPage);
+	});
+
+	// If not authenticated, redirect to login page
+	$effect(() => {
+		if (!isAuthenticated() && !isLoginPage) {
+			goto('/login?from=' + page.url.pathname);
+		}
 	});
 
 	async function handleLogout() {
@@ -53,11 +60,11 @@
 				<div class="pt-4">
 					<Button
 						variant="ghost"
-						class="w-full justify-start gap-2 text-destructive"
+						class="w-full justify-start gap-2 text-muted-foreground"
 						onclick={handleLogout}
 					>
 						<LogOut class="h-4 w-4" />
-						Logout
+						退出登录
 					</Button>
 				</div>
 			</nav>

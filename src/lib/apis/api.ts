@@ -78,7 +78,7 @@ export async function loginUser(credentials: LoginCredentials): Promise<LoginRes
     const errDetail = await res.json().catch(() => ({}))
     const err = new Error(`程序异常：${res.status}`)
     if(typeof errDetail.detail === 'string') {
-      err.message = `${res.status} : ${errDetail.detail}`
+      err.message = `${res.status}: ${errDetail.detail}`
     }
     throw err
   }
