@@ -35,7 +35,7 @@ export async function executeWorkflow(workflowAPI: string, fileInfo: any) {
     }
   })
   if(!res.ok) {
-    const errDetail = await res.json()
+    const errDetail = await res.json().catch(() => ({}))
     const err = new Error(`程序异常：${res.status}`)
     if(typeof errDetail.detail === 'string') {
       err.message = `${res.status} : ${errDetail.detail}`
@@ -53,4 +53,36 @@ export async function executeWorkflow(workflowAPI: string, fileInfo: any) {
   const responseData = await res.arrayBuffer()
   await writeFile(filePath, new Uint8Array(responseData))
   return {type: 'file', filePath, fileName}
+}
+
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
+export async function loginUser(credentials: LoginCredentials): Promise<LoginResponse> {
+  const res = await fetch(`${FLOW_API_URL}/users/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(credentials)
+  });
+
+  if (!res.ok) {
+    const errDetail = await res.json().catch(() => ({}))
+    const err = new Error(`程序异常：${res.status}`)
+    if(typeof errDetail.detail === 'string') {
+      err.message = `${res.status} : ${errDetail.detail}`
+    }
+    throw err
+  }
+
+  const data = await res.json();
+  return data;
 }

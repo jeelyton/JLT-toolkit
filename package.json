@@ -29,7 +29,8 @@
     "@tauri-apps/plugin-updater": "~2.7.1",
     "@tauri-apps/plugin-upload": "~2.2.1",
     "@tauri-apps/plugin-window-state": "~2",
-    "axios": "^1.9.0"
+    "axios": "^1.9.0",
+    "zod": "^4.0.2"
   },
   "devDependencies": {
     "@internationalized/date": "^3.8.1",
@@ -39,12 +40,14 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@tailwindcss/vite": "^4.0.0",
     "@tauri-apps/cli": "^2",
-    "bits-ui": "^2.7.0",
+    "bits-ui": "^2.8.10",
     "clsx": "^2.1.1",
+    "formsnap": "^2.0.1",
     "mode-watcher": "^1.0.8",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "svelte-sonner": "^1.0.5",
+    "sveltekit-superforms": "^2.27.1",
     "tailwind-merge": "^3.3.1",
     "tailwind-variants": "^1.0.0",
     "tailwindcss": "^4.0.0",

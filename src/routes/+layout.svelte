@@ -6,13 +6,14 @@
 	import { page } from '$app/state';
 	import {IS_DEV} from "$lib/apis/api";
 	import { useGlobalShortcut } from "$lib/hooks/useGlobalShortcut";
+	import { removeAuthToken } from "$lib/helpers/auth";
+	import { goto } from "$app/navigation";
 	
 	let { children } = $props();
 
 	const navItems = [
 		{ href: '/', label: '通用', icon: Home },
 		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: Truck },
-		{ href: '/flows/outstock-detail', label: '长城出库单', icon: Users },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel' },
 		{ href: '/settings', label: '设置', icon: Settings },
 	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列' } : []);
@@ -22,6 +23,11 @@
 	$effect(() => {
 		useGlobalShortcut(!isLoginPage);
 	});
+
+	async function handleLogout() {
+		removeAuthToken();
+		await goto('/login');
+	}
 </script>
 
 <div class="flex h-screen bg-background">
@@ -48,7 +54,7 @@
 					<Button
 						variant="ghost"
 						class="w-full justify-start gap-2 text-destructive"
-						href="/login"
+						onclick={handleLogout}
 					>
 						<LogOut class="h-4 w-4" />
 						Logout
