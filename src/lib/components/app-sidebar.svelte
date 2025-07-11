@@ -4,13 +4,13 @@
 
 	import {IS_DEV} from "$lib/apis/api";
 	import { Home, Settings, Users, FileText, LogOut, Truck, ChevronUp } from "@lucide/svelte";
-    import { removeAuthToken } from "$lib/helpers/auth";
+    import { removeTokens } from "$lib/helpers/auth.svelte";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
 
 
 	async function handleLogout() {
-		removeAuthToken();
+		removeTokens();
 		await goto('/login');
 	}
    

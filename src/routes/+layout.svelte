@@ -8,7 +8,7 @@
 	import { Toaster } from "$lib/components/ui/sonner/index.js";
 	import { page } from '$app/state';
 	import { useGlobalShortcut } from "$lib/hooks/useGlobalShortcut";
-	import { isAuthenticated } from "$lib/helpers/auth";
+	import { authState } from "$lib/helpers/auth.svelte";
 	import { goto } from "$app/navigation";
 
 
@@ -20,7 +20,7 @@
 
 	// If not authenticated, redirect to login page
 	$effect(() => {
-		if (!isAuthenticated() && !isLoginPage) {
+		if (!authState.isAuthenticated && !isLoginPage) {
 			goto('/login?from=' + page.url.pathname);
 		}
 	});
@@ -29,7 +29,7 @@
 
    
 <Sidebar.Provider style="--sidebar-width: 12rem">
-	{#if isAuthenticated()}
+	{#if authState.isAuthenticated }
 		<AppSidebar />
 	{/if}
 	<main class="p-5 container max-w-5xl mx-auto">

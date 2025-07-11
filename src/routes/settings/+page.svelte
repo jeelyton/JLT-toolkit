@@ -32,7 +32,7 @@
         </CardHeader>
         <CardContent class="space-y-4">
             <div class="flex items-center justify-between">
-                <Label for="output-dir">输出目录</Label>
+                <Label for="output-dir">默认输出目录</Label>
                 <Input class="w-64" type="text" bind:value={outputDir} />
             </div>
         </CardContent>

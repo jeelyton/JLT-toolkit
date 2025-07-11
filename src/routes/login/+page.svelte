@@ -5,7 +5,7 @@
   import { superForm } from "sveltekit-superforms";
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { loginUser } from "$lib/apis/api";
-  import { setTokens, isAuthenticated } from "$lib/helpers/auth";
+  import { setTokens, authState } from "$lib/helpers/auth.svelte";
   import { toast } from "svelte-sonner";
   import { goto } from "$app/navigation";
   import { Alert, AlertTitle, AlertDescription } from "$lib/components/ui/alert/index.js";
@@ -14,13 +14,6 @@
 
   let isLoading = $state(false)
   let errorMessage = $state("")
-
-  // 如果已经登录，自动跳转到主页
-  onMount(() => {
-    if (isAuthenticated()) {
-      goto('/');
-    }
-  });
  
   const form = superForm({
     username: localStorage.lastLoginUser || "",
