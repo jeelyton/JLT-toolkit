@@ -2,6 +2,7 @@ import { stat, writeFile } from "@tauri-apps/plugin-fs";
 import { desktopDir } from "@tauri-apps/api/path";
 import { upload } from "@tauri-apps/plugin-upload";
 import type { XFile } from "$lib/components/FileItem.svelte";
+import { getAccessToken } from "$lib/helpers/auth.svelte";
 
 export const IS_DEV = !import.meta.env.VITE_FLOW_API_URL
 export  const FLOW_API_URL = import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
@@ -31,6 +32,7 @@ export async function executeWorkflow(workflowAPI: string, fileInfo: any) {
     method: 'POST',
     body: JSON.stringify(fileInfo),
     headers: {
+      'Authorization': `Bearer ${getAccessToken()}`,
       'Content-Type': 'application/json'
     }
   })

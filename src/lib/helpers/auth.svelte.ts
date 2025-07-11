@@ -49,7 +49,7 @@ function initializeAuthState() {
     const token = getAccessToken();
     const userInfo = getUserInfo();
 
-    if(token && userInfo) {
+    if(token && 1) {
         authState.isAuthenticated = true;
         authState.userInfo = userInfo;
     }

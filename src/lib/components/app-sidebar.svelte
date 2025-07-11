@@ -19,7 +19,6 @@
 		{ href: '/', label: '首页', icon: Home },
 		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: Truck },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel' },
-		{ href: '/settings', label: '设置', icon: Settings },
 	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列' } : []);
 
     function isActive(href: string) {
@@ -80,9 +79,13 @@
                 side="top"
                 class="w-(--bits-dropdown-menu-anchor-width)"
             >
+                <DropdownMenu.Item onclick={() => goto('/settings')}>
+                    <Settings />
+                    <span>设置</span>
+                </DropdownMenu.Item>
                 <DropdownMenu.Item onclick={handleLogout}>
-                <LogOut />
-                <span>退出</span>
+                    <LogOut />
+                    <span>退出</span>
                 </DropdownMenu.Item>
             </DropdownMenu.Content>
             </DropdownMenu.Root>
