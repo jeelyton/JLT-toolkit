@@ -5,7 +5,7 @@
     import FileQueue from "$lib/components/FileQueue.svelte";
     import {FLOW_API_URL, IS_DEV} from "$lib/apis/api";
 
-    let outstockNosText = $state('SZ-STOA25073704');
+    let outstockNosText = $state('');
     let rows = $state(3);
 
     function formatText(text: string) {
@@ -34,7 +34,7 @@
             // The FileQueue component will handle the queue management
             window.dispatchEvent(new CustomEvent('addFile', {detail: fileItem}));
         }
-        if( IS_DEV ) {
+        if( !IS_DEV ) {
             outstockNosText = ''
         }
     }
