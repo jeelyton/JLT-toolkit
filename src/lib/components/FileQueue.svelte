@@ -4,7 +4,8 @@
   import { onMount } from 'svelte';
   import { FileItem, FileStatuses } from './FileItem.svelte';
   import FileListItem from './FileListItem.svelte';
-  import { uploadFile, executeWorkflow } from '$lib/apis/api';
+  import { uploadFile, downloadFile, executeWorkflow, FLOW_API_URL } from '$lib/apis/api';
+  import { desktopDir } from '@tauri-apps/api/path';
 
   // Props
   const { onProcessFile = defaultProcessFile, workflowAPI, maxConcurrent = 1 } = $props<{
@@ -29,6 +30,21 @@
     };
   });
 
+  async function fileOutputToXFile(output: any) {
+    if(output.filePath){ // local file
+      return output
+    }
+    const desktopPath = await desktopDir()
+    const fileName = output.file_path.split('/').pop()
+    const filePath = `${desktopPath}/${fileName}`
+    let url = output.url
+    if(!url) {
+      url = `${FLOW_API_URL}/files/${output.file_path}`
+    }
+    await downloadFile(url, filePath)
+    return { filePath, fileName }
+  }
+
   async function defaultProcessFile(fileItem: FileItem) {
     const params = fileItem.params
     if(fileItem.inputFiles.length > 0) {
@@ -42,12 +58,16 @@
       }
     }
     fileItem.setMessage('流程运行中...')
-    const output = await executeWorkflow(workflowAPI, params);
-    if(output.type === 'file') {
-      fileItem.addOutputFile(output);
-      fileItem.setMessage('完成')
-    } else {
-      fileItem.setMessage(JSON.stringify(output))
+    const res = await executeWorkflow(workflowAPI, params);
+    const outputs = Array.isArray(res) ? res : [res]
+    for(const output of outputs) {
+      if(output.type === 'file') {
+        const xFile = await fileOutputToXFile(output)
+        fileItem.addOutputFile(xFile);
+      }
+      if(output.message) {
+        fileItem.setMessage(output.message)
+      }
     }
     fileItem.setStatus(FileStatuses.COMPLETED);
   }

@@ -1,6 +1,6 @@
 import { stat, writeFile } from "@tauri-apps/plugin-fs";
 import { desktopDir } from "@tauri-apps/api/path";
-import { upload } from "@tauri-apps/plugin-upload";
+import { upload, download } from "@tauri-apps/plugin-upload";
 import type { XFile } from "$lib/components/FileItem.svelte";
 import { getAccessToken } from "$lib/helpers/auth.svelte";
 
@@ -12,12 +12,18 @@ export const N8N_API_URL = 'https://n8n.17ch.cn/webhook'
 export async function uploadFile(file: XFile, onProgress?: (progress: number) => void) {
     const fileStat = await stat(file.filePath)
     const fileSize = fileStat.size
-    const res  = await upload(FLOW_API_URL + '/file/', file.filePath, ({progress, progressTotal, total}) => {
+    const res  = await upload(FLOW_API_URL + '/files/', file.filePath, ({progress, progressTotal, total}) => {
       onProgress?.(Math.floor((progressTotal/fileSize) * 100))
     }, {
       'FileName': encodeURIComponent(file.fileName),
     })
     return JSON.parse(res)
+}
+
+export async function downloadFile(url: string, filePath: string, onProgress?: (progress: number) => void) {
+  await download(url, filePath, ({progress, progressTotal, total}) => {
+    // onProgress?.(Math.floor((progressTotal/total) * 100))
+  })
 }
 
 

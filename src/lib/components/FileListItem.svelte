@@ -32,7 +32,7 @@
   const itemClass = $derived(itemClasses[fileItem.status as keyof typeof itemClasses]);
   const StatusIcon = $derived(statusIcons[fileItem.status as keyof typeof statusIcons]);
   const iconColor = $derived(iconColors[fileItem.status as keyof typeof iconColors]);
-  const formattedTime = $derived(fileItem.startTime.toLocaleString());
+  const formattedTime = $derived(fileItem.startTime?.toLocaleString());
 </script>
 
 <div class="p-3 border rounded mb-2 {itemClass}">

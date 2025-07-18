@@ -3,9 +3,9 @@
     import Button from "$lib/components/ui/button/button.svelte";
     import {FileItem} from "$lib/components/FileItem.svelte";
     import FileQueue from "$lib/components/FileQueue.svelte";
-    import {FLOW_API_URL} from "$lib/apis/api";
+    import {FLOW_API_URL, IS_DEV} from "$lib/apis/api";
 
-    let outstockNosText = $state('');
+    let outstockNosText = $state('SZ-STOA25073704');
     let rows = $state(3);
 
     function formatText(text: string) {
@@ -30,11 +30,13 @@
 
     function onSubmit() {
         for(const outstock_no of outstockNos) {
-            const fileItem = new FileItem({outstock_no, uid: '0809080', __TITLE: `${outstock_no}`}, []);
+            const fileItem = new FileItem({outstock_no, __TITLE: `${outstock_no}`}, []);
             // The FileQueue component will handle the queue management
             window.dispatchEvent(new CustomEvent('addFile', {detail: fileItem}));
         }
-        outstockNosText = ''
+        if( IS_DEV ) {
+            outstockNosText = ''
+        }
     }
 </script>
 
