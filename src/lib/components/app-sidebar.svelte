@@ -19,6 +19,7 @@
 		{ href: '/', label: '首页', icon: Home },
 		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: Truck },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel' },
+        { href: '/flows/query-doc-type', label: '查询单号类型', icon: FileText },
 	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列' } : []);
 
     function isActive(href: string) {

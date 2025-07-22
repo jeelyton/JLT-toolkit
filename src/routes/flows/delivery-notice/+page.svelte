@@ -42,8 +42,8 @@
 
 <h1 class="text-3xl font-semibold text-center mb-5">发货(出库)通知</h1>
 <Textarea 
-    class="w-full p-2 border rounded"
-    placeholder="输入出库单号"
+    class="w-full"
+    placeholder="输入发货通知单号"
     rows={rows}
     autocapitalize="off"
     autocomplete="off"
