@@ -6,7 +6,8 @@ export const FileStatuses = {
     PENDING: 0,
     PROCESSING: 1,
     COMPLETED: 2,
-    ERROR: 4
+    WARNING: 8,
+    ERROR: 4,
 } as const
 export type FileStatus = typeof FileStatuses[keyof typeof FileStatuses]
 

@@ -12,6 +12,7 @@
     [FileStatuses.PENDING]: 'border-gray-300',
     [FileStatuses.PROCESSING]: 'border-blue-300',
     [FileStatuses.COMPLETED]: 'border-green-500',
+    [FileStatuses.WARNING]: 'border-yellow-400',
     [FileStatuses.ERROR]: 'border-red-300',
   } as const;
   
@@ -19,6 +20,7 @@
     [FileStatuses.PENDING]: Clock,
     [FileStatuses.PROCESSING]: Loader2,
     [FileStatuses.COMPLETED]: CheckCircle2,
+    [FileStatuses.WARNING]: AlertCircle,
     [FileStatuses.ERROR]: AlertCircle,
   } as const;
 
@@ -26,6 +28,7 @@
     [FileStatuses.PENDING]: 'text-gray-500',
     [FileStatuses.PROCESSING]: 'text-blue-500 animate-spin',
     [FileStatuses.COMPLETED]: 'text-green-500',
+    [FileStatuses.WARNING]: 'text-yellow-500',
     [FileStatuses.ERROR]: 'text-red-500',
   } as const;
   

@@ -3,6 +3,7 @@ import { desktopDir } from "@tauri-apps/api/path";
 import { upload, download } from "@tauri-apps/plugin-upload";
 import type { XFile } from "$lib/components/FileItem.svelte";
 import { getAccessToken } from "$lib/helpers/auth.svelte";
+import { fetch } from "@tauri-apps/plugin-http";
 
 export const IS_DEV = !import.meta.env.VITE_FLOW_API_URL
 export  const FLOW_API_URL = import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"

@@ -60,16 +60,21 @@
     fileItem.setMessage('流程运行中...')
     const res = await executeWorkflow(workflowAPI, params);
     const outputs = Array.isArray(res) ? res : [res]
+    let message = '流程运行完成'
+    let level = FileStatuses.COMPLETED
     for(const output of outputs) {
       if(output.type === 'file') {
         const xFile = await fileOutputToXFile(output)
         fileItem.addOutputFile(xFile);
+      } else if(output.level) {
+        level = output.level
       }
       if(output.message) {
-        fileItem.setMessage(output.message)
+        message = output.message
       }
     }
-    fileItem.setStatus(FileStatuses.COMPLETED);
+    fileItem.setMessage(message)
+    fileItem.setStatus(level);
   }
 
 
