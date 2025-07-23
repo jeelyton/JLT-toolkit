@@ -17,9 +17,12 @@
 
     function handleInput(event: Event) {
         const textarea = event.target as HTMLTextAreaElement;
-        const caretPos = textarea.selectionStart;
+        let caretPos = textarea.selectionStart;
+        const isCaretAtEnd = caretPos === outstockNosText.length;
         outstockNosText = formatText(outstockNosText)
-        
+        if(isCaretAtEnd) {
+            caretPos = outstockNosText.length;
+        }
         // Restore caret position in the next tick
         setTimeout(() => {
             textarea.setSelectionRange(caretPos, caretPos);
