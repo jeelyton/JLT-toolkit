@@ -3,7 +3,7 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 
 	import {IS_DEV} from "$lib/apis/api";
-	import { Home, Settings, Users, FileSpreadsheet, LogOut, Truck, ChevronUp, Sheet, TextSearch } from "@lucide/svelte";
+	import { Home, Settings, Users, FileSpreadsheet, LogOut, Truck, ChevronUp, Sheet, TextSearch, BugOff } from "@lucide/svelte";
     import { removeTokens } from "$lib/helpers/auth.svelte";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
@@ -21,7 +21,7 @@
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
         { href: '/flows/fill-columns', label: 'Excel 列填充', icon: Sheet },
         { href: '/flows/query-doc-type', label: '查询单号类型', icon: TextSearch },
-	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列' } : []);
+	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列', icon: BugOff } : []);
 
     function isActive(href: string) {
         return page.url.pathname === href;

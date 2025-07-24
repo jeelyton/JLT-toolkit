@@ -33,7 +33,7 @@
     },
     {
       "identifier": "http:default",
-      "allow": [{ "url": "http://127.0.0.1:8601" }]
+      "allow": [{ "url": "http://127.0.0.1:8601" }, { "url": "https://flow.17ch.cn" }]
     }
   ]
 }
