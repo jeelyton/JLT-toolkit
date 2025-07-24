@@ -4,7 +4,6 @@
   import { basename } from "@tauri-apps/api/path";
   import FileQueue from "$lib/components/FileQueue.svelte";
   import {FileItem} from "$lib/components/FileItem.svelte";
-  import { FLOW_API_URL } from "$lib/apis/api";
   import { useDragDrop } from "$lib/hooks/useDragDrop";
 
   async function addFile(filePath: string) {
@@ -13,12 +12,13 @@
     window.dispatchEvent(new CustomEvent('addFile', { detail: fileItem }));
   }
 
+  const fileFilters = [
+    { name: 'Excel', extensions: ['xlsx'] }
+  ]
   async function onSelectFile() {
     const files = await open({
       multiple: true,
-      filters: [
-        { name: 'Excel Files', extensions: ['xlsx'] }
-      ]
+      filters: fileFilters
     })
     if(files?.length) {
       for(const file of files) {
@@ -27,13 +27,13 @@
     }
   }
 
-  useDragDrop(addFile);
+  useDragDrop(addFile, fileFilters);
 </script>
   
 <h1 class="text-3xl font-semibold text-center mb-5">Excel 列填充</h1>
 <Button class="w-full border-primary text-primary" variant="outline" onclick={onSelectFile}>选择文件</Button>
 
 <div class="mt-5">
-  <FileQueue workflowAPI={FLOW_API_URL + '/flows/fill-columns'} maxConcurrent={5}/>
+  <FileQueue workflowAPI={'/flows/fill-columns'} maxConcurrent={5}/>
 </div>
   

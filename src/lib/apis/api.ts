@@ -2,13 +2,102 @@ import { stat, writeFile } from "@tauri-apps/plugin-fs";
 import { desktopDir } from "@tauri-apps/api/path";
 import { upload, download } from "@tauri-apps/plugin-upload";
 import type { XFile } from "$lib/components/FileItem.svelte";
-import { getAccessToken } from "$lib/helpers/auth.svelte";
+import { getAccessToken, getRefreshToken, isTokenExpired, setTokens, setUserInfo } from "$lib/helpers/auth.svelte";
 import { fetch } from "@tauri-apps/plugin-http";
 
 export const IS_DEV = !import.meta.env.VITE_FLOW_API_URL
 export  const FLOW_API_URL = import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
-export  const PLAY_API_URL = import.meta.env.VITE_PLAY_API_URL || "http://127.0.0.1:8602"
-export const N8N_API_URL = 'https://n8n.17ch.cn/webhook'
+
+
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+}
+
+export async function loginUser(credentials: LoginCredentials): Promise<LoginResponse> {
+  const res = await fetch(`${FLOW_API_URL}/users/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(credentials)
+  });
+
+  if (!res.ok) {
+    const errDetail = await res.json().catch(() => ({}))
+    const err = new Error(`程序异常：${res.status}`)
+    if(typeof errDetail.detail === 'string') {
+      err.message = `${res.status}: ${errDetail.detail}`
+    }
+    throw err
+  }
+
+  const data = await res.json();
+  setTokens(data)
+  const userInfo = await getUserInfo()
+  console.log('loginUser', data, userInfo)
+  setUserInfo(userInfo)
+  return data;
+}
+async function refreshToken(): Promise<LoginResponse> {
+  const res = await fetch(`${FLOW_API_URL}/users/refresh`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({refresh_token: getRefreshToken()})
+  });
+
+  if (!res.ok) {
+    const errDetail = await res.json().catch(() => ({}))
+    const err = new Error(`程序异常：${res.status}`)
+    if(typeof errDetail.detail === 'string') {
+      err.message = `${res.status}: ${errDetail.detail}`
+    }
+    throw err
+  }
+
+  const data = await res.json();
+  return data;
+}
+
+async function fetchWithToken(url: string, options: RequestInit) {
+  if(isTokenExpired()) {
+    const loginRes = await refreshToken();
+    setTokens(loginRes);
+  }
+  const access_token = getAccessToken()
+  url = url.startsWith('http') ? url : FLOW_API_URL + url;
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${access_token}`
+    }
+  })
+  if(!res.ok) {
+    const errDetail = await res.json().catch(() => ({}))
+    const err = new Error(`程序异常：${res.status}`)
+    if(typeof errDetail.detail === 'string') {
+      err.message = `${res.status}: ${errDetail.detail}`
+    }
+    throw err
+  }
+  return res;
+}
+async function getUserInfo() {
+  const res = await fetchWithToken('/users/me', {
+    method: 'GET'
+  })
+  return await res.json()
+}
+
 
 export async function uploadFile(file: XFile, onProgress?: (progress: number) => void) {
     const fileStat = await stat(file.filePath)
@@ -35,24 +124,10 @@ function getFileName(contentDisposition: string) {
 }
 
 export async function executeWorkflow(workflowAPI: string, fileInfo: any) {
-  const res = await fetch(workflowAPI, {
+  const res = await fetchWithToken(workflowAPI, {
     method: 'POST',
-    body: JSON.stringify(fileInfo),
-    headers: {
-      'Authorization': `Bearer ${getAccessToken()}`,
-      'Content-Type': 'application/json'
-    }
+    body: JSON.stringify(fileInfo)
   })
-  if(!res.ok) {
-    const errDetail = await res.json().catch(() => ({}))
-    const err = new Error(`程序异常：${res.status}`)
-    if(typeof errDetail.detail === 'string') {
-      err.message = `${res.status} : ${errDetail.detail}`
-    } else {
-      err.detail = errDetail
-    }
-    throw err
-  }
   if(res.headers.get('content-type') === 'application/json') {
     return await res.json()
   }
@@ -62,36 +137,4 @@ export async function executeWorkflow(workflowAPI: string, fileInfo: any) {
   const responseData = await res.arrayBuffer()
   await writeFile(filePath, new Uint8Array(responseData))
   return {type: 'file', filePath, fileName}
-}
-
-export interface LoginCredentials {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  access_token: string;
-  refresh_token: string;
-}
-
-export async function loginUser(credentials: LoginCredentials): Promise<LoginResponse> {
-  const res = await fetch(`${FLOW_API_URL}/users/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(credentials)
-  });
-
-  if (!res.ok) {
-    const errDetail = await res.json().catch(() => ({}))
-    const err = new Error(`程序异常：${res.status}`)
-    if(typeof errDetail.detail === 'string') {
-      err.message = `${res.status}: ${errDetail.detail}`
-    }
-    throw err
-  }
-
-  const data = await res.json();
-  return data;
 }

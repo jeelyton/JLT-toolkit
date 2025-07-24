@@ -4,7 +4,7 @@ import { toast } from "svelte-sonner";
 
 type UnlistenFn = () => void;
 
-export function useDragDrop(onFileAdd: (path: string) => Promise<void>) {
+export function useDragDrop(onFileAdd: (path: string) => Promise<void>, filters: { name: string, extensions: string[] }[]) {
   onMount(() => {
     let unlisten: UnlistenFn | undefined;
     
@@ -15,10 +15,10 @@ export function useDragDrop(onFileAdd: (path: string) => Promise<void>) {
         } else if (event.payload.type === 'drop') {
           const { paths } = event.payload;
           for (const path of paths) {
-            if (/\.(pdf|jpe?g|png)$/i.test(path)) {
+            if (filters.some(filter => filter.extensions.some(ext => path.endsWith(ext)))) {
               onFileAdd(path);
             } else {
-              toast.warning("只支持拖放 PDF 文件！");
+              toast.warning(`只支持拖放 ${filters.map(filter => filter.name).join(', ')} 文件！`);
             }
           }
         } else {

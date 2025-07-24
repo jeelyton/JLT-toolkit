@@ -3,7 +3,7 @@
     import Button from "$lib/components/ui/button/button.svelte";
     import {FileItem} from "$lib/components/FileItem.svelte";
     import FileQueue from "$lib/components/FileQueue.svelte";
-    import {FLOW_API_URL, IS_DEV} from "$lib/apis/api";
+    import { IS_DEV} from "$lib/apis/api";
 
     let outstockNosText = $state('');
     let rows = $state(3);
@@ -56,6 +56,6 @@
 <Button class="w-full mt-2" onclick={onSubmit}>确定</Button>
 
 <div class="mt-5">
-    <FileQueue workflowAPI={FLOW_API_URL + '/flows/delivery_notice'}/>
+    <FileQueue workflowAPI={'/flows/delivery_notice'}/>
 </div>
 

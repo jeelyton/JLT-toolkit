@@ -4,7 +4,7 @@
 
 	import {IS_DEV} from "$lib/apis/api";
 	import { Home, Settings, Users, FileSpreadsheet, LogOut, Truck, ChevronUp, Sheet, TextSearch, BugOff } from "@lucide/svelte";
-    import { removeTokens } from "$lib/helpers/auth.svelte";
+    import { authState, removeTokens } from "$lib/helpers/auth.svelte";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
 
@@ -72,7 +72,7 @@
                     {...props}
                     class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                    Username
+                    {authState.userInfo?.name}
                     <ChevronUp class="ml-auto" />
                 </Sidebar.MenuButton>
                 {/snippet}

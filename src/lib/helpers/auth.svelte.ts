@@ -1,42 +1,66 @@
 import type { LoginResponse } from "$lib/apis/api";
 
+export interface TokenInfo {
+    access_token: string;
+    refresh_token: string;
+    expires_at: number;
+}
+
+export interface UserInfo {
+    id: string;
+    username: string;
+    name: string;
+}
+
 // Reactive authentication state
 let authState = $state({
     isAuthenticated: false,
-    userInfo: null as { id: string; username: string; name: string } | null
+    tokenInfo: null as (TokenInfo | null),
+    userInfo: null as UserInfo | null
 });
 
 
-// Authentication utilities
-export function getAccessToken(): string | null {
-    return localStorage.getItem('access_token');
+export function isTokenExpired(): boolean {
+    const access_token = authState.tokenInfo?.access_token;
+    if(access_token && authState.tokenInfo!.expires_at < Date.now()) {
+        return true
+    }
+    return false
 }
-export function getRefreshToken(): string | null {
-    return localStorage.getItem('refresh_token');
+export function getAccessToken(): string | null {
+    const access_token = authState.tokenInfo?.access_token;
+    if(!access_token) {
+        throw new Error('未获取到登录信息！')
+    }
+    return access_token;
+}
+export function getRefreshToken(): string | undefined {
+    return authState.tokenInfo?.refresh_token;
 }
 
-export function setTokens(token: LoginResponse): void {
-    localStorage.setItem('access_token', token.access_token);
-    localStorage.setItem('refresh_token', token.refresh_token);
+export function setTokens(loginRes: LoginResponse): void {
+    const tokenInfo: TokenInfo = {
+        access_token: loginRes.access_token,
+        refresh_token: loginRes.refresh_token,
+        expires_at: Date.now() + loginRes.expires_in * 1000 - 1000*60*5
+    }
+    console.log('token refreshed, expires_at', new Date(tokenInfo.expires_at).toLocaleString())
+    localStorage.setItem('tokenInfo', JSON.stringify(tokenInfo));
+    authState.tokenInfo = tokenInfo;
 
     authState.isAuthenticated = true;
 }
 
 export function removeTokens(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    // localStorage.removeItem('user_info');
+    localStorage.removeItem('tokenInfo');
+    localStorage.removeItem('user_info');
 
     authState.isAuthenticated = false;
     authState.userInfo = null;
+    authState.tokenInfo = null;
 }
 
-export function getUserInfo(): { id: string; username: string; name: string } | null {
-    const userInfo = localStorage.getItem('user_info');
-    return userInfo ? JSON.parse(userInfo) : null;
-}
-
-export function setUserInfo(userInfo: { id: string; username: string; name: string }): void {
+export function setUserInfo(userInfo: UserInfo): void {
     localStorage.setItem('user_info', JSON.stringify(userInfo));
     authState.userInfo = userInfo;
 }
@@ -44,14 +68,25 @@ export function setUserInfo(userInfo: { id: string; username: string; name: stri
 // Export the reactive state for components that need it
 export { authState };
 
+function initTokenInfo() {
+    const tokenInfo = localStorage.getItem('tokenInfo');
+    return tokenInfo ? JSON.parse(tokenInfo) : null;
+}
+function initUserInfo(): { id: string; username: string; name: string } | null {
+    const userInfo = localStorage.getItem('user_info');
+    return userInfo ? JSON.parse(userInfo) : null;
+}
+
 // Initialize auth state
 function initializeAuthState() {
-    const token = getAccessToken();
-    const userInfo = getUserInfo();
+    const tokenInfo = initTokenInfo();
+    const userInfo = initUserInfo();
 
-    if(token && 1) {
+    if(tokenInfo) {
         authState.isAuthenticated = true;
         authState.userInfo = userInfo;
+        authState.tokenInfo = tokenInfo;
+        console.log('init token expires at', new Date(tokenInfo.expires_at).toLocaleString())
     }
 }
 initializeAuthState();

@@ -37,8 +37,7 @@
   async function handleLogin() {
     try {
         isLoading = true
-        const res = await loginUser($formData)
-        setTokens(res)
+        await loginUser($formData)
         localStorage.lastLoginUser = $formData.username
         toast.success('登录成功')
         goto(page.url.searchParams.get('from') || '/')
