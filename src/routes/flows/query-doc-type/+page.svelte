@@ -15,8 +15,8 @@
     });
 
     const typeMap = [
-        { prefix: 'YDDBSQ', type: '调拔申请单（跨组织）' },
-        { prefix: 'JLDBSQ', type: '调拔申请单（借料）' },
+        { prefix: 'YDDBSQ', type: '调拔申请单-跨组织' },
+        { prefix: 'JLDBSQ', type: '调拔申请单-借料' },
         { prefix: '-ZK', type: '直接调拨单' },
         { prefix: 'FBDC', type: '分步式调出单' },
         { prefix: 'FBDR', type: '分步式调入单' },
@@ -29,7 +29,7 @@
         { prefix: '-SQ', suffix: '-S', type: '销售报价子单' },
         { prefix: '-SQ', type: '销售报价单' },
         { prefix: '-SO', type: '销售订单' },
-        { prefix: '-SB', type: '销售备货单' },
+        { prefix: '-SB', type: '销售订单-备货单' },
         { prefix: '-STOA', type: '发货通知单' },
         { prefix: '-OSTO', type: '销售出库单' },
         { prefix: '-QTTO', type: '其他出库单' },

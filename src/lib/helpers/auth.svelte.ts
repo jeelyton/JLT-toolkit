@@ -7,8 +7,7 @@ export interface TokenInfo {
 }
 
 export interface UserInfo {
-    id: string;
-    username: string;
+    user_id: string;
     name: string;
 }
 
