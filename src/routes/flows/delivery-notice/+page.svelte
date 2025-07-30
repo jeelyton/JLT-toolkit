@@ -58,7 +58,7 @@
     <Tabs.Root bind:value={tab}>
         <Tabs.List class="w-full">
             <Tabs.Trigger value="1">单订单</Tabs.Trigger>
-            <Tabs.Trigger value="2">合并订单</Tabs.Trigger>
+            <Tabs.Trigger value="2">合并数据处理</Tabs.Trigger>
         </Tabs.List>
         </Tabs.Root>
         <Textarea 

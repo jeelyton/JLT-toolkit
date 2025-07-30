@@ -19,8 +19,8 @@
 		{ href: '/', label: '首页', icon: Home },
 		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: Truck },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
-        { href: '/flows/fill-columns', label: 'Excel 列填充', icon: Sheet },
-        { href: '/flows/query-doc-type', label: '查询单号类型', icon: TextSearch },
+        { href: '/flows/fill-columns', label: 'Excel 关联数据查询', icon: Sheet },
+        { href: '/flows/query-doc-type', label: '单号查类型', icon: TextSearch },
 	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列', icon: BugOff } : []);
 
     function isActive(href: string) {
@@ -34,7 +34,7 @@
         <Sidebar.Menu>
             <Sidebar.MenuItem>
                 <Sidebar.MenuButton>
-                    <span>吉利通</span>
+                    <span>吉利通助手</span>
                 </Sidebar.MenuButton>
             </Sidebar.MenuItem>
         </Sidebar.Menu>

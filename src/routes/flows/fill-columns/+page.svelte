@@ -30,7 +30,7 @@
   useDragDrop(addFile, fileFilters);
 </script>
   
-<h1 class="text-3xl font-semibold text-center mb-5">Excel 列填充</h1>
+<h1 class="text-3xl font-semibold text-center mb-5">Excel 关联数据查询</h1>
 <Button class="w-full border-primary text-primary" variant="outline" onclick={onSelectFile}>选择文件</Button>
 
 <div class="mt-5">
