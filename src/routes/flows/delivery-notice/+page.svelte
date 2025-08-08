@@ -6,7 +6,7 @@
     import FileQueue from "$lib/components/FileQueue.svelte";
     import { IS_DEV} from "$lib/apis/api";
 
-    let outstockNosText = $state('');
+    let outstockNosText = $state(IS_DEV ? localStorage.getItem('delivery-notice:input-value') || '' : '');
     let rows = $state(3);
     let tab = $state(localStorage.getItem('delivery-notice:selected-tab') || '1');
     let tabApi = $derived(tab === '1' ? '/flows/delivery_notice' : '/flows/delivery_notice_merge');
@@ -47,9 +47,10 @@
             const fileItem = new FileItem({outstock_nos: outstockNos, __TITLE: title}, []);
             window.dispatchEvent(new CustomEvent('addFile', {detail: fileItem}));
         }
-        if( !IS_DEV ) {
-            outstockNosText = ''
+        if(IS_DEV) {
+            localStorage.setItem('delivery-notice:input-value', outstockNosText);
         }
+        outstockNosText = ''
     }
 </script>
 
@@ -62,7 +63,7 @@
         </Tabs.List>
         </Tabs.Root>
         <Textarea 
-          class="w-full"
+          class="w-full font-mono"
           placeholder="输入发货通知单号"
           rows={rows}
           autocapitalize="off"

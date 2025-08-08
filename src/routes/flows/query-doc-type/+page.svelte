@@ -50,6 +50,7 @@
         { prefix: 'HBSQ', type: 'RE申请单' },
         { prefix: '-AR', type: '应收单' },
         { prefix: '-AP', type: '应付单' },
+        { prefix: '-ZD', type: '重点项目管控表' },
         { prefix: 'BZ-', type: '品质扣款申请' },
     ];
     function isMatch(docName: string, patternOrStr: string | RegExp) {
