@@ -65,9 +65,11 @@
     {#if fileItem.error}
       <HoverCard.Root>
         <HoverCard.Trigger><div class="text-sm text-red-500">{fileItem.error.message}</div></HoverCard.Trigger>
-        <HoverCard.Content class="w-auto max-w-[600px]">
-          <pre class="whitespace-pre-wrap break-words text-xs">{JSON.stringify(fileItem.error.detail, null, 2)}</pre>
-        </HoverCard.Content>
+        {#if fileItem.error.detail}
+          <HoverCard.Content class="w-auto max-w-[600px]">
+            <pre class="whitespace-pre-wrap break-words text-xs">{JSON.stringify(fileItem.error.detail, null, 2)}</pre>
+          </HoverCard.Content>
+        {/if}
       </HoverCard.Root>
     {:else}
       <div class="text-sm text-gray-600">{fileItem.message || ''}</div>

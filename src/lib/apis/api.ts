@@ -6,7 +6,8 @@ import { getAccessToken, getRefreshToken, isTokenExpired, setTokens, setUserInfo
 import { fetch } from "@tauri-apps/plugin-http";
 
 export const IS_DEV = !import.meta.env.VITE_FLOW_API_URL
-export  const FLOW_API_URL = import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
+export const FLOW_API_URL = localStorage.apiUrl || import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
+console.log('FLOW_API_URL', FLOW_API_URL)
 
 
 export interface LoginCredentials {
@@ -67,7 +68,7 @@ async function refreshToken(): Promise<LoginResponse> {
   return data;
 }
 
-async function fetchWithToken(url: string, options: RequestInit) {
+export async function fetchWithToken(url: string, options: RequestInit) {
   if(isTokenExpired()) {
     const loginRes = await refreshToken();
     setTokens(loginRes);
