@@ -93,8 +93,7 @@
     try {
       await onProcessFile(fileItem);
     } catch (err: any) {
-      console.error(err);
-      fileItem.setError(err);
+      fileItem.setError(typeof err === 'string' ? new Error('服务或网络异常，请稍后重试！') : err);
     } finally {
       activeProcesses--;
       processFileQueue(); // Process next file in queue
