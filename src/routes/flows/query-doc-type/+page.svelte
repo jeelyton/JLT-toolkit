@@ -60,9 +60,19 @@
 
         return docName.startsWith(patternOrStr);
     }
+    async function queryDocTypeFromApi(docNum: string) {
+        const segment = docNum.replace(/^-|-?\d+$/g, '');
+        if(!segment) {
+            return '';
+        }
+        const res = await fetch(`https://n8n.17ch.cn/webhook/query-bill-type?seg=${segment}`);
+        const data = await res.json();
+        if(!data.length) {
+            return '';
+        }
+        return data.map(item => item.FNAME.replace(/(?:标准)?编码规则$/, '')).join('<br/>');
+    }
     function getDocType(docNum: string) {
-        docNum = docNum.replace(/^(?:SZ|HZ|YN|TJ|SH|SC|SU|XY|SX|RH|JK|SR|DG)(?=-)/, '');
-
         for (const item of typeMap) {
             if(!isMatch(docNum, item.prefix)) {
                 continue;
@@ -72,12 +82,16 @@
         return '';
     }
 
-    function queryDocType(docNum: string) {
-        const docType = getDocType(docNum.trim());
+    async function queryDocType(docNum: string) {
+        docNum = docNum.replace(/^(?:SZ|HZ|YN|TJ|SH|SC|SU|XY|SX|RH|JK|SR|DG)(?=-)/, '');
+        let docType = getDocType(docNum.trim());
+        if(!docType) {
+            docType = await queryDocTypeFromApi(docNum);
+        }
         if( docType ) {
             result = docType;
         } else {
-            result = '未知单据类型，请联系管理员添加！';
+            result = '未知单据类型，请检查单号是否正确！';
         }
     }
 </script>
@@ -92,7 +106,7 @@
 <div class="mt-5">
     <div class="mt-3 p-3 bg-gray-100 rounded text-sm">
         {#if result}
-                <p class="text-muted-foreground">{result}</p>
+                <p class="text-muted-foreground">{@html result}</p>
         {:else}
                 <p class="text-muted-foreground">请输入单号</p>
         {/if}
