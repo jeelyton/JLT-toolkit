@@ -12,7 +12,9 @@
     let tabApi = $derived(tab === '1' ? '/flows/delivery_notice' : '/flows/delivery_notice_merge');
 
     function formatText(text: string) {
-        const cleanText = text.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+        // remove time from chat history
+        // remove non-alphanumeric characters
+        const cleanText = text.toUpperCase().replace(/\d{2}:\d{2}:\d{2}/g, '').replace(/[^A-Z0-9-]/g, '');
         const chunks = cleanText.split(/(?=[A-Z]{2}-)/g);
         rows = chunks.length;
         return  chunks.join('\n');
@@ -49,8 +51,9 @@
         }
         if(IS_DEV) {
             localStorage.setItem('delivery-notice:input-value', outstockNosText);
+        } else {
+            outstockNosText = ''
         }
-        outstockNosText = ''
     }
 </script>
 

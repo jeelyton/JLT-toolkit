@@ -14,7 +14,7 @@
     });
 
     const typeMap = [
-        { prefix: 'YDDBSQ', type: '调拔申请单-跨组织' },
+        { prefix: 'YDDBSQ', type: '调拔申请单-异地' },
         { prefix: 'JLDBSQ', type: '调拔申请单-借料' },
         { prefix: 'DLDBSQ', type: '调拔申请单-呆料' },
         { prefix: 'YPDBSQ', type: '调拔申请单-样品' },

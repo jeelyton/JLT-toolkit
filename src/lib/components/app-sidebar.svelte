@@ -1,9 +1,10 @@
 <script lang="ts">
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+    import { openUrl } from '@tauri-apps/plugin-opener';
 
 	import {IS_DEV} from "$lib/apis/api";
-	import { Home, Settings, Users, FileSpreadsheet, LogOut, Truck, ChevronUp, Sheet, TextSearch, BugOff } from "@lucide/svelte";
+	import { Home, Settings, Users, FileSpreadsheet, LogOut, Truck, ChevronUp, Sheet, TextSearch, FileText, BugOff } from "@lucide/svelte";
     import { authState, removeTokens } from "$lib/helpers/auth.svelte";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
@@ -19,6 +20,7 @@
 		{ href: '/', label: '首页', icon: Home },
 		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: Truck },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
+        { href: 'http://192.168.18.230:8080', label: 'PDF 助手', icon: FileText },
         { href: '/flows/fill-columns', label: 'Excel 关联数据查询', icon: Sheet },
         { href: '/flows/query-doc-type', label: '单号查类型', icon: TextSearch },
 	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列', icon: BugOff } : []);
@@ -47,14 +49,23 @@
             <Sidebar.Menu>
             {#each navItems as item (item.label)}
                 <Sidebar.MenuItem>
-                <Sidebar.MenuButton isActive={isActive(item.href)}>
+                <Sidebar.MenuButton isActive={isActive(item.href)} class="cursor-pointer" >
                     {#snippet child({ props })}
-                    <a href={item.href} {...props}>
-                    {#if item.icon}
-                        <item.icon />
+                    {#if !item.href.startsWith('http')}
+                        <a href={item.href} {...props}>
+                            {#if item.icon}
+                                <item.icon />
+                            {/if}
+                            <span>{item.label}</span>
+                        </a>
+                    {:else}
+                        <button onclick={() => openUrl(item.href)} {...props}>
+                                {#if item.icon}
+                                <item.icon />
+                            {/if}
+                            <span>{item.label}</span>
+                        </button>
                     {/if}
-                        <span>{item.label}</span>
-                    </a>
                     {/snippet}
                 </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
