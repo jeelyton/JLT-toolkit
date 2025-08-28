@@ -21,7 +21,7 @@
 		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: BillSTOAIcon },
         { href: '/flows/bill-ar', label: '应收对账单生成', icon: BillArIcon },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
-        { href: 'http://192.168.18.230:8080', label: 'PDF 助手', icon: PdfIcon },
+        { href: 'https://pdf.i.17ch.cn', label: 'PDF 助手', icon: PdfIcon },
         { href: '/flows/fill-columns', label: 'Excel 关联数据查询', icon: Sheet },
         { href: '/flows/query-doc-type', label: '单号查类型', icon: TextSearch },
 	].concat(IS_DEV ? { href: '/flows/test-file-queue', label: '测试文件队列', icon: BugOff } : []);
@@ -84,7 +84,7 @@
                     {...props}
                     class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                    {authState.userInfo?.name}
+                    {authState.userInfo?.name}{authState.becomeUser ? `(${authState.becomeUser})` : ''}
                     <ChevronUp class="ml-auto" />
                 </Sidebar.MenuButton>
                 {/snippet}

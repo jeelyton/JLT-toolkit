@@ -14,6 +14,7 @@ export interface UserInfo {
 // Reactive authentication state
 let authState = $state({
     isAuthenticated: false,
+    becomeUser: localStorage.becomeUser || '',
     tokenInfo: null as (TokenInfo | null),
     userInfo: null as UserInfo | null
 });
@@ -71,7 +72,7 @@ function initTokenInfo() {
     const tokenInfo = localStorage.getItem('tokenInfo');
     return tokenInfo ? JSON.parse(tokenInfo) : null;
 }
-function initUserInfo(): { id: string; username: string; name: string } | null {
+function initUserInfo(): UserInfo | null {
     const userInfo = localStorage.getItem('user_info');
     return userInfo ? JSON.parse(userInfo) : null;
 }

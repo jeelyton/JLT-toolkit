@@ -9,6 +9,8 @@
     import { getVersion } from '@tauri-apps/api/app'
     import SectionXkyCredential from "./section-xky-credential.svelte";
     import SectionApiChannel from "./section-api-channel.svelte";
+    import SectionBecome from "./section-become.svelte";
+    import { IS_DEV } from "$lib/apis/api";
     let outputDir = $state('');
     let version = $state('');
 
@@ -61,4 +63,7 @@
     </Card>
     <SectionXkyCredential />
     <SectionApiChannel />
+    {#if IS_DEV}
+        <SectionBecome />
+    {/if}
 </div> 

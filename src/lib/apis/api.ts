@@ -2,7 +2,7 @@ import { stat, writeFile } from "@tauri-apps/plugin-fs";
 import { desktopDir } from "@tauri-apps/api/path";
 import { upload, download } from "@tauri-apps/plugin-upload";
 import type { XFile } from "$lib/components/FileItem.svelte";
-import { getAccessToken, getRefreshToken, isTokenExpired, setTokens, setUserInfo } from "$lib/helpers/auth.svelte";
+import { authState, getAccessToken, getRefreshToken, isTokenExpired, setTokens, setUserInfo } from "$lib/helpers/auth.svelte";
 import { fetch } from "@tauri-apps/plugin-http";
 
 export const IS_DEV = !import.meta.env.VITE_FLOW_API_URL
@@ -79,7 +79,8 @@ export async function fetchWithToken(url: string, options: RequestInit) {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${access_token}`
+      'Authorization': `Bearer ${access_token}`,
+      ...(authState.becomeUser ? {'x-become': authState.becomeUser} : {})
     }
   })
   if(!res.ok) {
@@ -87,6 +88,8 @@ export async function fetchWithToken(url: string, options: RequestInit) {
     const err = new Error(`程序异常：${res.status}`)
     if(typeof errDetail.detail === 'string') {
       err.message = `${res.status}: ${errDetail.detail}`
+    } else if(errDetail.detail) {
+      err.detail = errDetail.detail
     }
     throw err
   }

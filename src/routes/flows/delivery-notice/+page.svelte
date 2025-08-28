@@ -16,9 +16,9 @@
     let rows = $state(3);
 
     function formatText(text: string) {
-        // remove time from chat history
+        // remove date and time from chat history
         // remove non-alphanumeric characters
-        const cleanText = text.toUpperCase().replace(/\d{2}:\d{2}:\d{2}/g, '').replace(/[^A-Z0-9-]/g, '');
+        const cleanText = text.toUpperCase().replace(/(?:\d{4}\/\d{1,2}\/\d{1,2} )?\d{2}:\d{2}:\d{2}/g, '').replace(/[^A-Z0-9-]/g, '');
         const chunks = cleanText.split(/(?=[A-Z]{2}-)/g);
         rows = chunks.length;
         return  chunks.join('\n');

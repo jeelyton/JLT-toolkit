@@ -11,7 +11,7 @@
     const channelUrl = {
         '': '',
         dev: 'http://192.168.18.229:8601',
-        prod: 'https://flow.17ch.cn'
+        prod: FLOW_API_URL || 'https://flow.17ch.cn'
     }
 
     function changeApiChannel(value: string) {
