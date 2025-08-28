@@ -2,8 +2,9 @@ import { stat, writeFile } from "@tauri-apps/plugin-fs";
 import { desktopDir } from "@tauri-apps/api/path";
 import { upload, download } from "@tauri-apps/plugin-upload";
 import type { XFile } from "$lib/components/FileItem.svelte";
-import { authState, getAccessToken, getRefreshToken, isTokenExpired, setTokens, setUserInfo } from "$lib/helpers/auth.svelte";
+import { authState, getAccessToken, getRefreshToken, isTokenExpired, removeTokens, setTokens, setUserInfo } from "$lib/helpers/auth.svelte";
 import { fetch } from "@tauri-apps/plugin-http";
+import { toast } from "svelte-sonner";
 
 export const IS_DEV = !import.meta.env.VITE_FLOW_API_URL
 export const FLOW_API_URL = localStorage.apiUrl || import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
@@ -46,6 +47,10 @@ export async function loginUser(credentials: LoginCredentials): Promise<LoginRes
   setUserInfo(userInfo)
   return data;
 }
+function handle401() {
+  toast.error('登录信息已过期，请重新登录！')
+  removeTokens()
+}
 async function refreshToken(): Promise<LoginResponse> {
   const res = await fetch(`${FLOW_API_URL}/users/refresh`, {
     method: 'POST',
@@ -56,11 +61,9 @@ async function refreshToken(): Promise<LoginResponse> {
   });
 
   if (!res.ok) {
-    const errDetail = await res.json().catch(() => ({}))
-    const err = new Error(`程序异常：${res.status}`)
-    if(typeof errDetail.detail === 'string') {
-      err.message = `${res.status}: ${errDetail.detail}`
-    }
+    handle401()
+    const err = await res.json().catch(() => ({}))
+    console.error('refreshToken', err)
     throw err
   }
 
@@ -84,6 +87,9 @@ export async function fetchWithToken(url: string, options: RequestInit) {
     }
   })
   if(!res.ok) {
+    if(res.status === 401) {
+      handle401()
+    }
     const errDetail = await res.json().catch(() => ({}))
     const err = new Error(`程序异常：${res.status}`)
     if(typeof errDetail.detail === 'string') {
