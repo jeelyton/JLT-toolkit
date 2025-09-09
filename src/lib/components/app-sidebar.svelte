@@ -4,7 +4,7 @@
     import { openUrl } from '@tauri-apps/plugin-opener';
 
 	import {IS_DEV} from "$lib/apis/api";
-	import { Home, Settings, FileSpreadsheet, LogOut, Truck as BillSTOAIcon, ChevronUp, Sheet, TextSearch, FileText as PdfIcon, BugOff, ListChecks as BillArIcon } from "@lucide/svelte";
+	import { Home, Settings, FileSpreadsheet, LogOut, Truck as BillSTOAIcon, ChevronUp, Sheet, TextSearch, FileText as PdfIcon, BugOff, ListChecks as BillArIcon, FilePlus as SalesOrderCreateIcon } from "@lucide/svelte";
     import { authState, removeTokens } from "$lib/helpers/auth.svelte";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
@@ -18,6 +18,7 @@
 
 	const navItems = [
 		{ href: '/', label: '首页', icon: Home },
+        { href: '/flows/sales-order-create', label: '销售订单导入', icon: SalesOrderCreateIcon },
 		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: BillSTOAIcon },
         { href: '/flows/bill-ar', label: '应收对账单生成', icon: BillArIcon },
 		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
