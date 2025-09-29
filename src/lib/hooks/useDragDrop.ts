@@ -15,7 +15,7 @@ export function useDragDrop(onFileAdd: (path: string) => Promise<void>, filters:
         } else if (event.payload.type === 'drop') {
           const { paths } = event.payload;
           for (const path of paths) {
-            if (filters.some(filter => filter.extensions.some(ext => path.endsWith(ext)))) {
+            if (filters.some(filter => filter.extensions.some(ext => path.toLowerCase().endsWith(ext)))) {
               onFileAdd(path);
             } else {
               toast.warning(`只支持拖放 ${filters.map(filter => filter.name).join(', ')} 文件！`);
