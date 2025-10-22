@@ -14,7 +14,8 @@
 
   const fileFilters = [
     { name: 'Excel', extensions: ['xlsx'] },
-    { name: 'PDF', extensions: ['pdf'] }
+    { name: 'PDF', extensions: ['pdf'] },
+    { name: 'Image', extensions: ['jpg', 'png'] }
   ]
   async function onSelectFile() {
     const files = await open({
