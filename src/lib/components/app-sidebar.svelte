@@ -4,7 +4,7 @@
     import { openUrl } from '@tauri-apps/plugin-opener';
 
 	import {IS_DEV} from "$lib/apis/api";
-	import { Home, Settings, FileSpreadsheet, LogOut, Truck as BillSTOAIcon, ChevronUp, Sheet, TextSearch, FileText as PdfIcon, BugOff, ListChecks as BillArIcon, FilePlus as SalesOrderCreateIcon } from "@lucide/svelte";
+	import { Home, Settings, FileSpreadsheet, LogOut, Truck as BillSTOAIcon, ChevronUp, Sheet, TextSearch, FileText as PdfIcon, BugOff, ListChecks as BillArIcon, FilePlus as SalesOrderCreateIcon, ChartLine as ChartIcon } from "@lucide/svelte";
     import { authState, removeTokens } from "$lib/helpers/auth.svelte";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
@@ -20,8 +20,12 @@
 		{ href: '/', label: '首页', icon: Home },
         { href: '/flows/sales-order-create', label: '销售订单导入', icon: SalesOrderCreateIcon },
 		{ href: '/flows/delivery-notice', label: '发货(出库)通知', icon: BillSTOAIcon },
+        { href: '/flows/delivery-notice-byd', label: '比亚迪发货', icon: BillSTOAIcon },
+        { href: '/flows/delivery-notice-byd2', label: '比亚迪采购', icon: BillSTOAIcon },
+        { href: '/flows/sales-monthly', label: '销售月报生成', icon: ChartIcon },
         { href: '/flows/bill-ar', label: '应收对账单生成', icon: BillArIcon },
-		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
+		// { href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
+        { href: 'https://dify.17ch.cn/chat/ONgtTf6WfuRiANLx', label: '吉利通AI助手', icon: PdfIcon },
         { href: 'https://pdf.i.17ch.cn', label: 'PDF 助手', icon: PdfIcon },
         { href: '/flows/fill-columns', label: 'Excel 关联数据查询', icon: Sheet },
         { href: '/flows/query-doc-type', label: '单号查类型', icon: TextSearch },

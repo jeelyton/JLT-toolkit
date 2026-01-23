@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { N8N_API_URL } from "$lib/apis/api";
     import Input from "$lib/components/ui/input/input.svelte";
 
     let docNo = $state('');
@@ -65,7 +66,7 @@
         if(!segment) {
             return '';
         }
-        const res = await fetch(`https://n8n.17ch.cn/webhook/query-bill-type?seg=${segment}`);
+        const res = await fetch(`${N8N_API_URL}/query-bill-type?seg=${segment}`);
         const data = await res.json();
         if(!data.length) {
             return '';

@@ -35,7 +35,7 @@
       return output
     }
     const desktopPath = await desktopDir()
-    const fileName = output.file_path.split('/').pop()
+    const fileName = output.filename || output.file_path.split('/').pop()
     const filePath = `${desktopPath}/${fileName}`
     let url = output.url
     if(!url) {

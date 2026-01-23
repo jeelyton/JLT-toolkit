@@ -9,6 +9,7 @@ import { toast } from "svelte-sonner";
 export const IS_DEV = !import.meta.env.VITE_FLOW_API_URL
 export const FLOW_API_URL = localStorage.apiUrl || import.meta.env.VITE_FLOW_API_URL || "http://127.0.0.1:8601"
 console.log('FLOW_API_URL', FLOW_API_URL)
+export const N8N_API_URL = 'https://n8n.17ch.cn/webhook'
 
 
 export interface LoginCredentials {
@@ -91,6 +92,7 @@ export async function fetchWithToken(url: string, options: RequestInit) {
       handle401()
     }
     const errDetail = await res.json().catch(() => ({}))
+    console.error(errDetail)
     const err = new Error(`程序异常：${res.status}`)
     if(typeof errDetail.detail === 'string') {
       err.message = `${res.status}: ${errDetail.detail}`
@@ -138,7 +140,7 @@ export async function executeWorkflow(workflowAPI: string, fileInfo: any) {
     method: 'POST',
     body: JSON.stringify(fileInfo)
   })
-  if(res.headers.get('content-type') === 'application/json') {
+  if(res.headers.get('content-type')?.includes('application/json')) {
     return await res.json()
   }
   const desktopPath = await desktopDir()
