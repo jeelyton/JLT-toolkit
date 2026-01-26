@@ -24,7 +24,7 @@
         { href: '/flows/delivery-notice-byd2', label: '比亚迪采购', icon: BillSTOAIcon },
         { href: '/flows/sales-monthly', label: '销售月报生成', icon: ChartIcon },
         { href: '/flows/bill-ar', label: '应收对账单生成', icon: BillArIcon },
-		// { href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
+		{ href: '/flows/extract-customer-po', label: '客户采购单转 Excel', icon: FileSpreadsheet },
         { href: 'https://dify.17ch.cn/chat/ONgtTf6WfuRiANLx', label: '吉利通AI助手', icon: PdfIcon },
         { href: 'https://pdf.i.17ch.cn', label: 'PDF 助手', icon: PdfIcon },
         { href: '/flows/fill-columns', label: 'Excel 关联数据查询', icon: Sheet },
