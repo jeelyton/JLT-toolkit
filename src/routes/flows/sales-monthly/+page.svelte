@@ -10,14 +10,25 @@
   import { Label } from "$lib/components/ui/label/index.js";
   import {ChevronDownIcon} from "@lucide/svelte";
   import { CalendarDate, today } from "@internationalized/date";
+  import { Textarea } from "$lib/components/ui/textarea/index.js";
   const id = $props.id();
  
   const timezone = "Asia/Shanghai";
   
+  const STORAGE_KEY = 'report-ignoreCustomers';
+
   let open = $state(false);
   // Default to 1st of previous month
   let calendarValue = $state(today(timezone).subtract({ months: 1 }).set({ day: 1 }));
+  let ignoreCustomers = $state(
+    typeof localStorage !== 'undefined' ? (localStorage.getItem(STORAGE_KEY) ?? '') : ''
+  );
 
+  $effect(() => {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, ignoreCustomers);
+    }
+  });
   // Always ensure the day is set to 1st of the month
   $effect(() => {
     if (calendarValue && calendarValue.day !== 1) {
@@ -45,15 +56,19 @@
   const maxValue = $derived(today(timezone));
 
   function onSubmit() {
-    const fileItem = new FileItem({startDate: formattedDate, __TITLE: formattedDate}, []);
+    const fileItem = new FileItem({
+      startDate: formattedDate,
+      ignore_cust_groups: ignoreCustomers.split('\n'),
+      __TITLE: formattedDate}, []);
     window.dispatchEvent(new CustomEvent('addFile', {detail: fileItem}));
   }
 
 </script>
   
 <h1 class="text-3xl font-semibold text-center mb-5">销售月报生成</h1>
-<div class="flex flex-col gap-3">
-  <Label for="{id}-date" class="px-1">选择月份</Label>
+<div class="space-y-4">
+<div class="flex gap-3">
+  <Label for="{id}-date" class="w-20 text-right">选择月份</Label>
   <Popover.Root bind:open>
     <Popover.Trigger id="{id}-date">
       {#snippet child({ props }: { props: Record<string, any> })}
@@ -79,7 +94,13 @@
     </Popover.Content>
   </Popover.Root>
 </div>
+<div class="flex gap-3">
+  <Label class="px-1 w-20">忽略客户</Label>
+  <Textarea class="w-full" bind:value={ignoreCustomers} rows={5} placeholder="请输入忽略客户集团名称，每行一个"></Textarea>
+</div>
+
 <Button class="w-full border-primary text-primary" variant="outline" onclick={onSubmit}>生成月报</Button>
+</div>
 
 <div class="mt-5">
   <FileQueue workflowAPI={`${N8N_API_URL}/sales-monthly`} maxConcurrent={5}/>
